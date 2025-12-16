@@ -1,75 +1,104 @@
 # Claude Code Workflow Guide
 
-Efficient context management for multi-project work with Claude Code.
+Persistent context management for Claude Code sessions.
 
 ---
 
-## Core Concept
+## Quick Install
 
-`CLAUDE.md` in your project root = your project's memory. Claude reads it automatically at chat start.
+Tell Claude:
 
----
+```
+Set up the checkpoint command from https://github.com/creativeprofit22/claude-workflow-guide
+```
 
-## The `/checkpoint` Command
-
-One command that handles everything — saves to file AND gives you a continuation prompt.
-
-### Setup
-
-Create `~/.claude/commands/checkpoint.md` with [this content](checkpoint.md).
-
-### What It Does
-
-When you run `/checkpoint`:
-
-1. **Updates CLAUDE.md** — Progress saved to disk (survives closing terminal)
-2. **Outputs a continuation prompt** — Ready to copy if you need to clear context
-
-### When To Use It
-
-| Situation | What Happens |
-|-----------|--------------|
-| Context getting full, keep working | Copy prompt → `/clear` → paste → continue |
-| Done for the day | Just close. CLAUDE.md is saved for tomorrow |
-| Quick save mid-session | State captured either way |
+That's it. Claude will create `~/.claude/commands/checkpoint.md` for you.
 
 ---
 
-## Starting a New Chat
+## What This Does
+
+The `/checkpoint` command solves two problems:
+
+1. **Context bloat** — When your session gets too long, you lose context. `/checkpoint` generates a continuation prompt so you can `/clear` and keep going.
+
+2. **Session continuity** — Progress is saved to `CLAUDE.md` in your project root. Next time you open Claude in that project, it picks up where you left off.
+
+---
+
+## How It Works
+
+Run `/checkpoint` and two things happen:
+
+1. **CLAUDE.md gets updated** — Your progress is saved to disk
+2. **A continuation prompt appears** — Copy it if you need to clear context
+
+Then you can:
+- **Clear now**: Copy prompt → `/clear` → paste → keep working
+- **Stop for the day**: Just close. CLAUDE.md has everything for tomorrow
+- **Keep working**: Do nothing, state is saved anyway
+
+---
+
+## Usage
+
+### Starting a Session
 
 ```
 Let's work on /path/to/your/project
 ```
 
-That's it. Claude navigates there, reads `CLAUDE.md`, knows everything.
+Claude reads the `CLAUDE.md` file and knows the project state.
 
----
+### During Work
 
-## Mid-Session: Context Getting Full
-
-Run `/context` to check usage. When it's getting high:
+When context gets high (check with `/context`):
 
 ```
 /checkpoint
 ```
 
-Then either:
-- **Keep working**: Copy the prompt → `/clear` → paste → continue with fresh context
-- **Take a break**: Just leave it. CLAUDE.md is already updated.
+Copy the continuation prompt, run `/clear`, paste, continue.
 
----
-
-## Ending a Session
+### Ending a Session
 
 ```
 /checkpoint
 ```
 
-Close the terminal. Tomorrow, start with "Let's work on /path/to/project" and you're back.
+Close the terminal. Tomorrow, start fresh and CLAUDE.md brings you back up to speed.
+
+---
+
+## The Continuation Prompt
+
+When you run `/checkpoint`, you get something like:
+
+```
+## Continuation Prompt
+
+Continue work on MyProject at /home/user/myproject.
+
+**What's Done**: [1-2 bullets of recent progress]
+
+**Current State**: [where you left off]
+
+**Next Step**: [the immediate next thing to do]
+
+**Key Files**: [2-3 relevant file paths]
+
+**Key Context**: [critical info to remember]
+
+**Approach**: Do NOT explore the full codebase. Use the context above.
+```
+
+This is designed to be minimal but sufficient — CLAUDE.md has the full details.
 
 ---
 
 ## CLAUDE.md Template
+
+The command creates this structure if it doesn't exist:
 
 ```markdown
 # Project Name
@@ -77,97 +106,42 @@ Close the terminal. Tomorrow, start with "Let's work on /path/to/project" and yo
 One-line description.
 
 ## Current Focus
-Section: [which part you're working on]
-Files: [specific files]
+Section: [current area of work]
+Files: [relevant files]
 
 ## Last Session ([date])
 - What was done
 - Stopped at: [where you left off]
 
 ## Next Steps
-1. First thing to do
-2. Second thing
-3. Third thing
-
-## Sections
-- **Module A:** docs/a.md, src/a/
-- **Module B:** docs/b.md, src/b/
-
-## Interfaces (don't break)
-- Module A connects to B via [X]
-
-## Don't Touch
-- [Stable modules not being worked on]
+1. [First thing to do]
+2. [Second thing]
+3. [Third thing]
 ```
+
+You can expand this with additional sections as needed (interfaces, modules to avoid, etc).
 
 ---
 
-## Working on Specific Sections
+## Manual Installation
 
-Instead of loading entire project context:
+If you prefer to set it up yourself:
 
-```
-Let's work on the auth module. Focus on docs/auth.md and src/auth/
-```
-
-Claude only reads those files. Minimal tokens.
-
----
-
-## Multi-Project Setup
-
-Keep a note with your active projects:
-
-```
-Project A: /home/user/projects/project-a
-Project B: /home/user/projects/project-b
-```
-
-Paste the right path when starting a chat.
-
----
-
-## Project Structure for Efficiency
-
-```
-/your-project
-├── CLAUDE.md           # High-level index
-├── docs/
-│   ├── module-a.md     # Deep dive per section
-│   ├── module-b.md
-│   └── module-c.md
-├── src/
-│   ├── module-a/
-│   ├── module-b/
-│   └── module-c/
-```
-
-- `CLAUDE.md` = overview + current state
-- `docs/*.md` = detailed section docs
-- Tell Claude which section to focus on
+1. Create `~/.claude/commands/checkpoint.md`
+2. Copy the contents from [checkpoint.md](checkpoint.md)
+3. Done — `/checkpoint` is now available in all your Claude Code sessions
 
 ---
 
 ## Quick Reference
 
-| Action | What to Do |
-|--------|------------|
+| Action | Command |
+|--------|---------|
 | Start session | `Let's work on [path]` |
-| Check context | `/context` |
-| Save progress + get continuation prompt | `/checkpoint` |
+| Check context usage | `/context` |
+| Save progress | `/checkpoint` |
 | Clear and continue | Copy prompt → `/clear` → paste |
-| Focus on section | `Focus on [files/folders]` |
 
 ---
 
-## Why This Works
-
-- **No repeated explanations** — docs hold context
-- **Minimal token usage** — read only what's needed
-- **Clean handoffs** — next chat picks up instantly
-- **Nothing breaks** — interfaces documented
-- **Mid-session covered** — `/checkpoint` handles context bloat
-
----
-
-*One command. Both problems solved.*
+*One command. Context managed.*

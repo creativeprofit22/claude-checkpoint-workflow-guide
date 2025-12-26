@@ -42,6 +42,52 @@ Each phase ends with a context clear. Fresh context = better focus.
 
 ---
 
+## Execution Options
+
+Every checkpoint command prompts you with two options before running:
+
+### Parallel Execution
+
+> Run with parallel agents?
+
+When enabled, spawns multiple Task agents to work concurrently:
+
+| Command | What Runs in Parallel |
+|---------|----------------------|
+| `/build-checkpoint` | Different parts of the feature |
+| `/validate-checkpoint` | Tests, API, UI, Wiring, Bottlenecks, Bugs (6 agents) |
+| `/refactor-hunt-checkpoint` | Multiple files analyzed simultaneously |
+| `/refactor-checkpoint` | Independent refactors executed concurrently |
+
+**Pros:** Faster execution
+**Cons:** Uses more resources, higher API costs
+
+### Ultra Think Mode
+
+> Enable ultra think mode?
+
+When enabled, activates extended reasoning before each action:
+
+- Deep analysis before implementation decisions
+- Thorough investigation during validation
+- Careful consideration before refactoring
+
+**Pros:** Higher quality, catches more edge cases
+**Cons:** Slower execution, more verbose
+
+### Default Behavior
+
+Both options default to **No** (sequential execution, standard reasoning). Choose based on your needs:
+
+| Scenario | Parallel | Ultra Think |
+|----------|----------|-------------|
+| Quick iteration | No | No |
+| Complex feature | Yes | No |
+| Critical code | No | Yes |
+| Major refactor | Yes | Yes |
+
+---
+
 ## Installation
 
 Copy commands to your Claude Code config:

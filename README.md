@@ -33,7 +33,7 @@ Each phase ends with a context clear. Fresh context = better focus.
 
 | Command | Purpose |
 |---------|---------|
-| `/build-checkpoint` | Implement feature → hand off to validation |
+| `/build-checkpoint` | Prepare build, ask options → output continuation for implementation |
 | `/validate-checkpoint` | Tests, API, UI, wiring, bottlenecks, bugs → fix loop |
 | `/refactor-hunt-checkpoint` | Find refactoring opportunities → produce report |
 | `/refactor-checkpoint` | Execute refactors → hand off to next feature |
@@ -122,11 +122,13 @@ Files: src/auth/login.ts, src/auth/session.ts
 ### 2. Run the Cycle
 
 ```bash
-# Implement feature 1
+# Prepare to build feature 1
 /build-checkpoint
-# → Builds the feature
-# → Outputs continuation prompt
+# → Asks: Parallel agents? Ultra think mode?
+# → Outputs continuation prompt with options embedded
 # → Clear context, paste prompt
+# → Implementation happens in fresh context
+# → After done, run /validate-checkpoint
 
 # Validate the implementation
 /validate-checkpoint

@@ -1,16 +1,16 @@
 ---
-description: Implement feature from plan, output continuation for validation
+description: Prepare build, ask execution options, output continuation for implementation
 ---
 
 # Build Checkpoint
 
-Implement a single feature, then hand off to validation.
+Prepare to implement a feature. Ask execution options, then output continuation prompt for implementation.
 
 ## Instructions
 
-### 0. Execution Options (Ask First)
+### 1. Execution Options (Ask First)
 
-Before proceeding, ask the user:
+Ask the user:
 
 **Question 1 - Parallel Execution:**
 > Run with parallel agents? (Multiple Task agents work concurrently on different parts of the feature)
@@ -22,11 +22,11 @@ Before proceeding, ask the user:
 > - Yes - Deep analysis, thorough planning before coding
 > - No - Standard execution (default)
 
-Store choices and apply throughout this command's execution.
+Store the user's choices for the continuation prompt.
 
 ---
 
-### 1. Get Current Feature
+### 2. Get Current Feature
 
 Read CLAUDE.md. Look for:
 
@@ -41,7 +41,7 @@ Features-Remaining: [list or count]
 - Look for `## Features` or `## Next Steps` to find what to build
 - If nothing found, ask user: "What feature should I implement?"
 
-### 2. Get Scope
+### 3. Get Scope
 
 Extract from CLAUDE.md:
 - `Current Focus > Files` — files to work on
@@ -49,79 +49,58 @@ Extract from CLAUDE.md:
 
 **If scope unclear:** Ask user for key file paths.
 
-### 3. Implement the Feature
+### 4. Output Continuation Prompt for Implementation
 
-Work only on scoped files. For each change:
-- Read file first
-- Make focused edits
-- Don't over-engineer
-
-**Keep it simple.** Implement what's needed, nothing more.
-
-### 4. Update Pipeline State
-
-```markdown
-## Pipeline State
-Phase: validate
-Feature: [feature just implemented]
-Files-Changed: [list files you modified/created]
-Features-Remaining: [updated list]
-```
-
-### 5. Update CLAUDE.md & Output Continuation
-
-**Update CLAUDE.md (KEEP IT LEAN):**
-- REPLACE `Last Session` with brief summary of what was implemented
-- Update `Pipeline State` as above
-- Target: under 150 lines
-
-**Output this continuation prompt:**
+**Do NOT implement yet.** Output the continuation prompt with execution options embedded:
 
 ```
 ## Continuation Prompt
 
 Continue work on [Project] at [directory].
 
-**Phase**: validate
+**Phase**: build (implementation)
 **Feature**: [feature name]
 
-**Files to validate** (implementation just completed):
+**Execution Options**:
+- Parallel: [Yes/No - from user choice]
+- Ultra Think: [Yes/No - from user choice]
+
+**Scope** (work only on these files):
 - [file1]
 - [file2]
 
-**What was implemented**:
-- [1-2 bullets on what was built]
+**What to Build**:
+[Brief description of the feature]
 
-**Next Action**: Run comprehensive validation:
-1. Run tests (if exist)
-2. Check API endpoints work
-3. Verify UI renders correctly
-4. Trace wiring (UI → Logic → API)
-5. Look for bottlenecks
-6. Look for bugs
+**Next Action**: Implement the feature.
+- If Parallel=Yes: Spawn Task agents for independent components
+- If Ultra Think=Yes: Deep analysis before each implementation decision
 
-Fix any issues found, retest until clean.
+After implementation complete, run /validate-checkpoint to begin validation.
 
-**Key files**: [entry points, test files, config]
+**Approach**: Read only the files in Scope. Implement what's needed, nothing more.
 ```
 
-**STOP.** Do not validate. Wait for context clear.
+**STOP.** Do not implement. Wait for user to clear context and paste prompt.
 
 ## Output Summary
 
 ```
-Feature implemented: [name]
+Build checkpoint ready for: [feature name]
 
-Files changed:
-- [list]
+Execution options:
+- Parallel: [Yes/No]
+- Ultra Think: [Yes/No]
 
-Ready for validation. Copy the continuation prompt, clear context, and paste to begin validation phase.
+Scope:
+- [files]
+
+Copy the continuation prompt, clear context, and paste to begin implementation.
 ```
 
 ## Guidelines
 
-- One feature at a time
-- Don't explore beyond scope
-- Don't add unrequested features
-- Keep implementation focused
-- If blocked, note it and ask user
+- This command prepares, it does NOT implement
+- Implementation happens after context clear
+- Execution options are embedded in the continuation prompt
+- Keep scope focused and explicit

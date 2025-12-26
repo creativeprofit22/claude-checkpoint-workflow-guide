@@ -194,12 +194,6 @@ Reports:
 
 ---
 
-## Credits
-
-Massive props to Willem for the original approach. This guide fuses that with systematic validation and refactoring workflows.
-
----
-
 <div align="center">
 
 **Happy Building!**
